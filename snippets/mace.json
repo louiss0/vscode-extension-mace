@@ -1,0 +1,54 @@
+{
+  "Named import": {
+    "prefix": "mace-import",
+    "description": "Insert a named Mace import declaration",
+    "body": [
+      "|===|",
+      "from \"${1:./shared.mace}\" import ${2:Name};",
+      "|===|"
+    ]
+  },
+  "Data output block": {
+    "prefix": "mace-output-data",
+    "description": "Insert a data output block",
+    "body": [
+      "[output = data]",
+      "{",
+      "  ${1:result}: ${2:value},",
+      "}"
+    ]
+  },
+  "Schema output block": {
+    "prefix": "mace-output-schema",
+    "description": "Insert a schema output block",
+    "body": [
+      "[output = schema]",
+      "{",
+      "  ${1:name}: ${2:string},",
+      "}"
+    ]
+  },
+  "Type declaration": {
+    "prefix": "mace-alias",
+    "description": "Insert a Mace alias declaration",
+    "body": [
+      "alias ${1:Name}: ${2:string};"
+    ]
+  },
+  "Schema declaration": {
+    "prefix": "mace-schema",
+    "description": "Insert a Mace schema declaration",
+    "body": [
+      "schema ${1:Name}: {",
+      "  ${2:field}: ${3:string},",
+      "};"
+    ]
+  },
+  "Typed variable declaration": {
+    "prefix": "mace-var",
+    "description": "Insert a typed immutable Mace variable declaration",
+    "body": [
+      "${1:string} ${2:name} = ${3:\"value\"};"
+    ]
+  }
+}

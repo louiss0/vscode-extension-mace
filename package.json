@@ -1,0 +1,138 @@
+{
+  "name": "mace",
+  "displayName": "Mace",
+  "description": "Official language support for Mace configuration files.",
+  "version": "0.0.1",
+  "publisher": "the-code-fixer-23",
+  "author": "Shelton Louis <louisshelton0@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/louiss0/vscode-extension-mace.git"
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:mace"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "compile": "tsc -p tsconfig.json",
+    "bundle": "esbuild src/extension.ts --bundle --platform=node --format=cjs --external:vscode --outfile=dist/extension.js",
+    "build": "pnpm run compile && pnpm run bundle",
+    "watch": "tsc -w -p tsconfig.json",
+    "test": "pnpm run compile && node --test dist/test/**/*.test.js",
+    "package": "pnpm run test && pnpm run bundle && vsce package --no-dependencies"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "mace.restartLanguageServer",
+        "title": "Restart Language Server",
+        "category": "Mace",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "mace.showLanguageServerOutput",
+        "title": "Show Language Server Output",
+        "category": "Mace",
+        "icon": "$(output)"
+      },
+      {
+        "command": "mace.selectLanguageServer",
+        "title": "Select Language Server",
+        "category": "Mace"
+      },
+      {
+        "command": "mace.clearLanguageServerCache",
+        "title": "Clear Downloaded Language Servers",
+        "category": "Mace"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "mace.restartLanguageServer",
+          "when": "editorLangId == mace",
+          "group": "mace@1"
+        },
+        {
+          "command": "mace.showLanguageServerOutput",
+          "when": "editorLangId == mace",
+          "group": "mace@2"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "mace.restartLanguageServer",
+        "key": "ctrl+alt+m r",
+        "mac": "cmd+alt+m r",
+        "when": "editorLangId == mace"
+      }
+    ],
+    "configuration": {
+      "title": "Mace",
+      "properties": {
+        "mace.server.path": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "description": "Optional path to a Mace CLI binary. The extension downloads the pinned release when this is empty."
+        },
+        "mace.server.developmentMode": {
+          "type": "boolean",
+          "default": false,
+          "scope": "machine-overridable",
+          "description": "Run `go run ./cmd lsp` from the workspace instead of the pinned Mace release."
+        }
+      }
+    },
+    "languages": [
+      {
+        "id": "mace",
+        "aliases": [
+          "Mace",
+          "mace"
+        ],
+        "extensions": [
+          ".mace"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "mace",
+        "scopeName": "source.mace",
+        "path": "./syntaxes/mace.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "mace",
+        "path": "./snippets/mace.json"
+      }
+    ]
+  },
+  "dependencies": {
+    "extract-zip": "^2.0.1",
+    "tar": "^7.5.1",
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/vscode": "^1.100.0",
+    "@vscode/vsce": "^3.6.2",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.9.0",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.3.2"
+  }
+}

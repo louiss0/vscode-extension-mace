@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+
+import {
+	getBinaryServerCommand,
+	getDevelopmentServerCommand,
+} from '../src/server-command.js';
+
+test('starts the repository language server in development mode', () => {
+	assert.deepEqual(getDevelopmentServerCommand('C:\\workspace\\mace'), {
+		command: 'go',
+		args: ['run', './cmd', 'lsp'],
+		options: { cwd: 'C:\\workspace\\mace' },
+	});
+});
+
+test('starts a release binary with the lsp subcommand', () => {
+	assert.deepEqual(getBinaryServerCommand('C:\\bin\\mace.exe'), {
+		command: 'C:\\bin\\mace.exe',
+		args: ['lsp'],
+	});
+});

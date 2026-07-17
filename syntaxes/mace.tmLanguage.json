@@ -1,0 +1,259 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Mace",
+  "scopeName": "source.mace",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#inlineDocumentation" },
+    { "include": "#paths" },
+    { "include": "#strings" },
+    { "include": "#scriptDelimiters" },
+    { "include": "#declarations" },
+    { "include": "#documentationKeys" },
+    { "include": "#properties" },
+    { "include": "#keywords" },
+    { "include": "#modifiers" },
+    { "include": "#types" },
+    { "include": "#languageConstants" },
+    { "include": "#numbers" },
+    { "include": "#specialVariables" },
+    { "include": "#namedTypes" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.mace",
+          "begin": "//",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.mace",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "inlineDocumentation": {
+      "patterns": [
+        {
+          "name": "comment.line.documentation.mace",
+          "begin": "/#",
+          "end": "(?=[,;]|$)"
+        }
+      ]
+    },
+    "paths": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.path.mace",
+          "match": "(?:(?<=\\bfrom\\s)|(?<=\\b(?:schema_file|parse_file)\\s=\\s))'[^'\\\\\\r\\n$]*'"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.triple.mace",
+          "begin": "\"\"\"",
+          "end": "\"\"\"",
+          "patterns": [
+            { "include": "#escapes" },
+            { "include": "#interpolation" }
+          ]
+        },
+        {
+          "name": "string.quoted.double.mace",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "include": "#escapes" },
+            { "include": "#interpolation" }
+          ]
+        },
+        {
+          "name": "string.quoted.single.mace",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "include": "#escapes" }
+          ]
+        }
+      ]
+    },
+    "escapes": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.mace",
+          "match": "\\\\[\\\\'\"nrt]"
+        }
+      ]
+    },
+    "interpolation": {
+      "name": "meta.interpolation.mace",
+      "begin": "\\$\\(",
+      "beginCaptures": {
+        "0": { "name": "punctuation.section.interpolation.begin.mace" }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.interpolation.end.mace" }
+      },
+      "patterns": [
+        { "include": "source.mace" }
+      ]
+    },
+    "scriptDelimiters": {
+      "patterns": [
+        {
+          "name": "punctuation.section.embedded.mace",
+          "match": "\\|=+\\|"
+        }
+      ]
+    },
+    "declarations": {
+      "patterns": [
+        {
+          "match": "\\b(alias|schema)\\s+([A-Za-z][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.mace" },
+            "2": { "name": "entity.name.type.mace" }
+          }
+        },
+        {
+          "match": "\\b(gen_doc|schema_doc)\\s+([A-Za-z][A-Za-z0-9_]*)",
+          "captures": {
+            "1": { "name": "keyword.declaration.mace" },
+            "2": { "name": "entity.name.type.mace" }
+          }
+        }
+      ]
+    },
+    "documentationKeys": {
+      "patterns": [
+        {
+          "name": "variable.other.property.mace",
+          "match": "\\b(summary|description|fields)\\b(?=\\s*:)"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.mace",
+          "match": "\\b(from|import|as|alias|schema|gen_doc|schema_doc|output|schema_file|parse|parse_file|match)\\b"
+        }
+      ]
+    },
+    "modifiers": {
+      "patterns": [
+        {
+          "name": "storage.modifier.mace",
+          "match": "\\bnullable\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "support.type.builtin.mace",
+          "match": "\\b(string|int|float|hex_int|hex_float|boolean|array|record|fusion|variant|choice)\\b"
+        }
+      ]
+    },
+    "languageConstants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.mace",
+          "match": "\\b(true|false)\\b"
+        },
+        {
+          "name": "constant.language.null.mace",
+          "match": "\\bnull\\b"
+        },
+        {
+          "name": "constant.language.directive.mace",
+          "match": "\\b(data|schema)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex-float.mace",
+          "match": "(?<![\\p{L}\\p{Nd}_])0[xX][0-9A-Fa-f]+\\.[0-9A-Fa-f]+"
+        },
+        {
+          "name": "constant.numeric.hex-integer.mace",
+          "match": "(?<![\\p{L}\\p{Nd}_])0[xX][0-9A-Fa-f]+"
+        },
+        {
+          "name": "constant.numeric.float.mace",
+          "match": "(?<![\\p{L}\\p{Nd}_])[0-9]+\\.[0-9]+"
+        },
+        {
+          "name": "constant.numeric.integer.mace",
+          "match": "(?<![\\p{L}\\p{Nd}_])[0-9]+"
+        }
+      ]
+    },
+    "specialVariables": {
+      "patterns": [
+        {
+          "name": "variable.language.self.mace",
+          "match": "\\$self\\b"
+        },
+        {
+          "name": "variable.other.readwrite.mace",
+          "match": "\\$[A-Za-z][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "namedTypes": {
+      "patterns": [
+        {
+          "name": "entity.name.type.mace",
+          "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+        }
+      ]
+    },
+    "properties": {
+      "patterns": [
+        {
+          "name": "variable.other.property.mace",
+          "match": "[A-Za-z][A-Za-z0-9_]*(?=\\??\\s*:)"
+        },
+        {
+          "name": "variable.other.property.mace",
+          "match": "(?<=\\.)[A-Za-z][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.word.mace",
+          "match": "\\bin\\b"
+        },
+        {
+          "name": "keyword.operator.mace",
+          "match": "(?:>>>|>>|<<|<>|\\*\\*|&&|\\|\\||==|!=|<=|>=|\\?\\.|\\?\\?|=>|[!~+\\-*/%&|^<>=?])"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.separator.delimiter.mace",
+          "match": "[,;:.]"
+        },
+        {
+          "name": "punctuation.section.brackets.mace",
+          "match": "[{}\\[\\]()]"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,118 @@
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import test from 'node:test';
+
+import { loadWASM, OnigScanner, OnigString } from 'vscode-oniguruma';
+import { INITIAL, Registry, type IRawGrammar, type StateStack } from 'vscode-textmate';
+
+const extensionRoot = resolve(__dirname, '..', '..');
+
+async function loadMaceGrammar() {
+	const wasmPath = require.resolve('vscode-oniguruma/release/onig.wasm');
+	await loadWASM(await readFile(wasmPath));
+
+	const registry = new Registry({
+		onigLib: Promise.resolve({ createOnigScanner: patterns => new OnigScanner(patterns), createOnigString: text => new OnigString(text) }),
+		loadGrammar: async scopeName => {
+			if (scopeName !== 'source.mace') {
+				return null;
+			}
+			return JSON.parse(
+				await readFile(resolve(extensionRoot, 'syntaxes/mace.tmLanguage.json'), 'utf8'),
+			) as IRawGrammar;
+		},
+	});
+
+	const grammar = await registry.loadGrammar('source.mace');
+	assert.ok(grammar);
+	return grammar;
+}
+
+function scopesFor(source: string, grammar: Awaited<ReturnType<typeof loadMaceGrammar>>) {
+	let ruleStack: StateStack = INITIAL;
+	return source.split('\n').flatMap(line => {
+		const tokenized = grammar.tokenizeLine(line, ruleStack);
+		ruleStack = tokenized.ruleStack;
+		return tokenized.tokens.map(token => ({
+			text: line.slice(token.startIndex, token.endIndex),
+			scopes: token.scopes,
+		}));
+	});
+}
+
+test('TextMate grammar scopes Tree-sitter language features', async () => {
+	const grammar = await loadMaceGrammar();
+	const tokens = scopesFor(
+		`|===|\nfrom './shared.mace' import Region;\nnullable array<hex_float> values = left <> right;\nboolean included = item in values;\nstring label = "value=$(values)" /# rendered label;\n|===|\n[output = data]\n{ label: label, }`,
+		grammar,
+	);
+
+	const scopes = (text: string) => tokens.find(token => token.text === text)?.scopes ?? [];
+	assert.ok(scopes('from').includes('keyword.control.mace'));
+	assert.ok(scopes('nullable').includes('storage.modifier.mace'));
+	assert.ok(scopes('hex_float').includes('support.type.builtin.mace'));
+	assert.ok(scopes('<>').includes('keyword.operator.mace'));
+	assert.ok(scopes('in').includes('keyword.operator.word.mace'));
+	assert.ok(
+		tokens.some(
+			token =>
+				token.text.includes('rendered label') &&
+				token.scopes.includes('comment.line.documentation.mace'),
+		),
+	);
+	assert.ok(scopes('label').some(scope => scope === 'variable.other.property.mace'));
+});
+
+test('TextMate grammar covers every Tree-sitter lexical family', async () => {
+	const grammar = await loadMaceGrammar();
+	const tokens = scopesFor(
+		`// line\n/* block */\n|===|\nfrom './shared.mace' import - as Shared;\nalias Value: variant[string, int, float, hex_int, hex_float, boolean, array<string>, record<int>, fusion[Shared], choice[true, false, 1, 1.0, 0x1, 0x1.0]];\nschema Item: { optional?: nullable Value, };\ngen_doc Value { summary: "Value", description: """A $(Shared) value""", };\nschema_doc Item { fields: { optional: 'Optional', }, };\nint math = !flag || left && right | bits ^ mask & value == other != third < upper <= max > lower >= min << one >> two >>> three + four - five * six / seven % eight ** nine ? ten : null;\nValue matched = match (value) { string => \"text\", };\n|===|\n[output = data, schema = Item, schema_file = './schema.mace', parse = Item, parse_file = './input.mace']\n{ optional: $self.value ?? $input?.value, }`,
+		grammar,
+	);
+
+	const hasScope = (text: string, scope: string) =>
+		tokens.some(token => token.text === text && token.scopes.includes(scope));
+
+	for (const keyword of [
+		'from', 'import', 'as', 'output', 'schema_file', 'parse', 'parse_file', 'match',
+	]) {
+		assert.ok(hasScope(keyword, 'keyword.control.mace'), `missing keyword scope for ${keyword}`);
+	}
+	for (const declaration of ['alias', 'schema', 'gen_doc', 'schema_doc']) {
+		assert.ok(
+			hasScope(declaration, 'keyword.declaration.mace'),
+			`missing declaration scope for ${declaration}`,
+		);
+	}
+	for (const type of [
+		'string', 'int', 'float', 'hex_int', 'hex_float', 'boolean',
+		'array', 'record', 'fusion', 'variant', 'choice',
+	]) {
+		assert.ok(hasScope(type, 'support.type.builtin.mace'), `missing type scope for ${type}`);
+	}
+	for (const operator of [
+		'!', '||', '&&', '|', '^', '&', '==', '!=', '<', '<=', '>', '>=',
+		'<<', '>>', '>>>', '+', '-', '*', '/', '%', '**', '?', '??', '?.', '=>',
+	]) {
+		assert.ok(hasScope(operator, 'keyword.operator.mace'), `missing operator scope for ${operator}`);
+	}
+	assert.ok(tokens.some(token => token.scopes.includes('comment.line.double-slash.mace')));
+	assert.ok(tokens.some(token => token.scopes.includes('comment.block.mace')));
+	assert.ok(tokens.some(token => token.scopes.includes('string.quoted.single.path.mace')));
+	assert.ok(tokens.some(token => token.scopes.includes('string.quoted.single.mace')));
+	assert.ok(tokens.some(token => token.scopes.includes('string.quoted.double.mace')));
+	assert.ok(tokens.some(token => token.scopes.includes('string.quoted.triple.mace')));
+	assert.ok(tokens.some(token => token.scopes.includes('meta.interpolation.mace')));
+	assert.ok(hasScope('1', 'constant.numeric.integer.mace'));
+	assert.ok(hasScope('1.0', 'constant.numeric.float.mace'));
+	assert.ok(hasScope('0x1', 'constant.numeric.hex-integer.mace'));
+	assert.ok(hasScope('0x1.0', 'constant.numeric.hex-float.mace'));
+	assert.ok(hasScope('true', 'constant.language.boolean.mace'));
+	assert.ok(hasScope('null', 'constant.language.null.mace'));
+	assert.ok(hasScope('|===|', 'punctuation.section.embedded.mace'));
+	assert.ok(hasScope('summary', 'variable.other.property.mace'));
+	assert.ok(hasScope('Shared', 'entity.name.type.mace'));
+	assert.ok(hasScope('$self', 'variable.language.self.mace'));
+	assert.ok(hasScope('$input', 'variable.other.readwrite.mace'));
+});
