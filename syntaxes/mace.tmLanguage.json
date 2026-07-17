@@ -95,11 +95,11 @@
       "name": "meta.interpolation.mace",
       "begin": "\\$\\(",
       "beginCaptures": {
-        "0": { "name": "punctuation.section.interpolation.begin.mace" }
+        "0": { "name": "meta.interpolation.begin.mace" }
       },
       "end": "\\)",
       "endCaptures": {
-        "0": { "name": "punctuation.section.interpolation.end.mace" }
+        "0": { "name": "meta.interpolation.end.mace" }
       },
       "patterns": [
         { "include": "source.mace" }
@@ -108,7 +108,7 @@
     "scriptDelimiters": {
       "patterns": [
         {
-          "name": "punctuation.section.embedded.mace",
+          "name": "meta.embedded.block.delimiter.mace",
           "match": "\\|=+\\|"
         }
       ]
@@ -118,14 +118,14 @@
         {
           "match": "\\b(alias|schema)\\s+([A-Za-z][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "keyword.declaration.mace" },
+            "1": { "name": "keyword.other.declaration.mace" },
             "2": { "name": "entity.name.type.mace" }
           }
         },
         {
           "match": "\\b(gen_doc|schema_doc)\\s+([A-Za-z][A-Za-z0-9_]*)",
           "captures": {
-            "1": { "name": "keyword.declaration.mace" },
+            "1": { "name": "keyword.other.declaration.mace" },
             "2": { "name": "entity.name.type.mace" }
           }
         }
@@ -154,7 +154,7 @@
           "match": "\\bmatch\\b"
         },
         {
-          "name": "keyword.declaration.mace",
+          "name": "keyword.other.declaration.mace",
           "match": "\\b(alias|gen_doc|schema_doc)\\b"
         }
       ]
@@ -262,11 +262,11 @@
     "punctuation": {
       "patterns": [
         {
-          "name": "punctuation.separator.delimiter.mace",
+          "name": "meta.delimiter.mace",
           "match": "[,;:.]"
         },
         {
-          "name": "punctuation.section.brackets.mace",
+          "name": "meta.brace.mace",
           "match": "[{}\\[\\]()]"
         }
       ]

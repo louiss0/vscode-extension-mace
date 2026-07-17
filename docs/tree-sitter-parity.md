@@ -8,7 +8,7 @@ Tree-sitter builds a syntax tree and enforces structure. VS Code's TextMate engi
 
 | Tree-sitter family | Tree-sitter rules | TextMate repository entries and scopes |
 | --- | --- | --- |
-| Document structure | `source_file`, `script_block`, `_script_delimiter`, `output_block` | `scriptDelimiters` → `punctuation.section.embedded.mace`; output keywords, brackets, and fields use their respective entries |
+| Document structure | `source_file`, `script_block`, `_script_delimiter`, `output_block` | `scriptDelimiters` → `meta.embedded.block.delimiter.mace`; output keywords, brackets, and fields use their respective entries |
 | Trivia | `comment` | `comments` → `comment.line.double-slash.mace`, `comment.block.mace` |
 | Identifiers | `identifier`, `identifier_word`, `field_name` | `properties`, `namedTypes`, `specialVariables`; unclassified identifiers retain `source.mace` |
 | Strings | `string_literal`, `doc_block_string`, `inline_doc_block`, `interpolation`, `path_literal` | `strings`, `paths`, `escapes`, `interpolation` → quoted-string, path, escape, and interpolation scopes |
@@ -39,7 +39,7 @@ Tree-sitter builds a syntax tree and enforces structure. VS Code's TextMate engi
 ## Scope policy
 
 - `match` uses `keyword.control.mace`; imports and directives use specialized `keyword.other` scopes.
-- Declaration words use `keyword.declaration.mace`, while declared type names use `entity.name.type.mace`.
+- Declaration words use `keyword.other.declaration.mace`, while declared type names use `entity.name.type.mace`.
 - `nullable` uses `storage.modifier.mace`.
 - Primitive and composite type constructors use `storage.type.primitive.mace` and `storage.type.composite.mace`.
 - Named type references use `storage.type.named.mace`.
@@ -47,7 +47,7 @@ Tree-sitter builds a syntax tree and enforces structure. VS Code's TextMate engi
 - `$self` uses `variable.language.self.mace`; parsed input uses `variable.other.readwrite.mace`.
 - Operators use `keyword.operator.mace`, except word-form `in`, which uses `keyword.operator.word.mace`.
 
-These names follow the [TextMate grammar naming conventions](https://macromates.com/manual/en/language_grammars#naming-conventions): language types belong under `storage.type`, declarations under `entity.name.type`, constants under `constant`, and framework-oriented `support` scopes are avoided for Mace syntax.
+These names follow the [TextMate grammar naming conventions](https://macromates.com/manual/en/language_grammars#naming-conventions): language types belong under `storage.type`, declarations under `entity.name.type`, constants under `constant`, and framework-oriented `support` scopes are avoided for Mace syntax. Structural delimiters use non-styling `meta` scopes instead of introducing a non-standard root scope.
 
 ## Verification
 

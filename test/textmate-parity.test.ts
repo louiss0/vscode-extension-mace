@@ -86,7 +86,7 @@ test('TextMate grammar covers every Tree-sitter lexical family', async () => {
 	assert.ok(hasScope('match', 'keyword.control.mace'));
 	for (const declaration of ['alias', 'schema', 'gen_doc', 'schema_doc']) {
 		assert.ok(
-			hasScope(declaration, 'keyword.declaration.mace'),
+			hasScope(declaration, 'keyword.other.declaration.mace'),
 			`missing declaration scope for ${declaration}`,
 		);
 	}
@@ -121,7 +121,7 @@ test('TextMate grammar covers every Tree-sitter lexical family', async () => {
 	assert.ok(hasScope('0x1.0', 'constant.numeric.hex-float.mace'));
 	assert.ok(hasScope('true', 'constant.language.boolean.mace'));
 	assert.ok(hasScope('null', 'constant.language.null.mace'));
-	assert.ok(hasScope('|===|', 'punctuation.section.embedded.mace'));
+	assert.ok(hasScope('|===|', 'meta.embedded.block.delimiter.mace'));
 	assert.ok(hasScope('summary', 'variable.other.property.mace'));
 	assert.ok(hasScope('Shared', 'storage.type.named.mace'));
 	assert.ok(hasScope('$self', 'variable.language.self.mace'));
