@@ -5,7 +5,7 @@ The extension applies the APIs described by VS Code's [Common Capabilities](http
 | Capability | Mace implementation |
 | --- | --- |
 | Commands | Restart the language server, show its output, select its executable strategy, and clear downloaded servers |
-| Configuration | `mace.server.path` and `mace.server.developmentMode`; development mode defaults to the workspace's `go run ./cmd lsp` |
+| Configuration | `mace.server.path`, `mace.server.sourcePath`, and `mace.server.developmentMode`; development mode locates the Mace module among workspace ancestors before running `go run ./cmd lsp` |
 | Keybindings | `Ctrl+Alt+M R` (`Cmd+Alt+M R` on macOS) restarts the server while editing Mace |
 | Context menus | Mace editors expose restart and output commands |
 | Data storage | Release binaries are cached under `ExtensionContext.globalStorageUri` and shared across workspaces |

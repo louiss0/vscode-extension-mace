@@ -18,6 +18,7 @@ import {
 	shouldUseDevelopmentServer,
 	type ServerCommand,
 } from './server-command.js';
+import { findMaceSourcePath } from './source-path.js';
 
 const commandIds = {
 	clearCache: 'mace.clearLanguageServerCache',
@@ -213,16 +214,26 @@ class MaceRuntime implements vscode.Disposable {
 			return { value: getBinaryServerCommand(configuredPath) };
 		}
 
-		const workspacePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+		const workspacePaths = vscode.workspace.workspaceFolders?.map(folder => folder.uri.fsPath) ?? [];
 		const usesDevelopmentServer = shouldUseDevelopmentServer(
 			configuration.get<boolean>('developmentMode', true),
 			process.env.MACE_EXTENSION_MODE,
 		);
 		if (usesDevelopmentServer) {
-			if (!workspacePath) {
-				return { error: new Error('Mace development mode requires an open workspace') };
+			const configuredSourcePath = configuration.get<string>('sourcePath', '').trim();
+			const sourcePath = await findMaceSourcePath(
+				workspacePaths,
+				configuredSourcePath || undefined,
+			);
+			if (!sourcePath) {
+				return {
+					error: new Error(
+						'Mace development mode could not find the source repository. '
+						+ 'Set mace.server.sourcePath or select the pinned release.',
+					),
+				};
 			}
-			return { value: getDevelopmentServerCommand(workspacePath) };
+			return { value: getDevelopmentServerCommand(sourcePath) };
 		}
 
 		const metadataPath = join(this.context.extensionPath, 'mace-version.json');
@@ -230,10 +241,7 @@ class MaceRuntime implements vscode.Disposable {
 		try {
 			metadataContent = await readFile(metadataPath, 'utf8');
 		} catch {
-			if (!workspacePath) {
-				return { error: new Error('The Mace release version is missing') };
-			}
-			return { value: getDevelopmentServerCommand(workspacePath) };
+			return { error: new Error('The Mace release version is missing') };
 		}
 
 		const metadata = parseReleaseMetadata(metadataContent);

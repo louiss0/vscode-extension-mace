@@ -19,7 +19,7 @@ By default, the extension runs the current workspace source with:
 go run ./cmd lsp
 ```
 
-This mode requires Go and expects the first open workspace folder to be the Mace source repository. It ensures extension development uses the current checkout rather than the older pinned release.
+This mode requires Go. The extension searches every workspace folder and its ancestors for the `github.com/louiss0/mace` Go module, so opening the nested `vscode-extension-mace` repository correctly runs the command from its parent Mace repository. Set `mace.server.sourcePath` when the source lives elsewhere.
 
 Disable `mace.server.developmentMode` to download the release in `mace-version.json`. Release binaries are cached in VS Code's global extension storage and support Linux, macOS, and Windows on x64 and ARM64. Set `mace.server.path` to use another Mace executable; it must support `mace lsp`.
 
