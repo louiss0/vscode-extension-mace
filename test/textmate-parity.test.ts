@@ -49,9 +49,9 @@ test('TextMate grammar scopes Tree-sitter language features', async () => {
 	);
 
 	const scopes = (text: string) => tokens.find(token => token.text === text)?.scopes ?? [];
-	assert.ok(scopes('from').includes('keyword.control.mace'));
+	assert.ok(scopes('from').includes('keyword.other.import.mace'));
 	assert.ok(scopes('nullable').includes('storage.modifier.mace'));
-	assert.ok(scopes('hex_float').includes('support.type.builtin.mace'));
+	assert.ok(scopes('hex_float').includes('storage.type.primitive.mace'));
 	assert.ok(scopes('<>').includes('keyword.operator.mace'));
 	assert.ok(scopes('in').includes('keyword.operator.word.mace'));
 	assert.ok(
@@ -74,22 +74,33 @@ test('TextMate grammar covers every Tree-sitter lexical family', async () => {
 	const hasScope = (text: string, scope: string) =>
 		tokens.some(token => token.text === text && token.scopes.includes(scope));
 
-	for (const keyword of [
-		'from', 'import', 'as', 'output', 'schema_file', 'parse', 'parse_file', 'match',
-	]) {
-		assert.ok(hasScope(keyword, 'keyword.control.mace'), `missing keyword scope for ${keyword}`);
+	for (const keyword of ['from', 'import', 'as']) {
+		assert.ok(hasScope(keyword, 'keyword.other.import.mace'), `missing import scope for ${keyword}`);
 	}
+	for (const directive of ['output', 'schema_file', 'parse', 'parse_file']) {
+		assert.ok(
+			hasScope(directive, 'keyword.other.directive.mace'),
+			`missing directive scope for ${directive}`,
+		);
+	}
+	assert.ok(hasScope('match', 'keyword.control.mace'));
 	for (const declaration of ['alias', 'schema', 'gen_doc', 'schema_doc']) {
 		assert.ok(
 			hasScope(declaration, 'keyword.declaration.mace'),
 			`missing declaration scope for ${declaration}`,
 		);
 	}
-	for (const type of [
-		'string', 'int', 'float', 'hex_int', 'hex_float', 'boolean',
-		'array', 'record', 'fusion', 'variant', 'choice',
-	]) {
-		assert.ok(hasScope(type, 'support.type.builtin.mace'), `missing type scope for ${type}`);
+	for (const type of ['string', 'int', 'float', 'hex_int', 'hex_float', 'boolean']) {
+		assert.ok(
+			hasScope(type, 'storage.type.primitive.mace'),
+			`missing primitive type scope for ${type}`,
+		);
+	}
+	for (const type of ['array', 'record', 'fusion', 'variant', 'choice']) {
+		assert.ok(
+			hasScope(type, 'storage.type.composite.mace'),
+			`missing composite type scope for ${type}`,
+		);
 	}
 	for (const operator of [
 		'!', '||', '&&', '|', '^', '&', '==', '!=', '<', '<=', '>', '>=',
@@ -112,7 +123,7 @@ test('TextMate grammar covers every Tree-sitter lexical family', async () => {
 	assert.ok(hasScope('null', 'constant.language.null.mace'));
 	assert.ok(hasScope('|===|', 'punctuation.section.embedded.mace'));
 	assert.ok(hasScope('summary', 'variable.other.property.mace'));
-	assert.ok(hasScope('Shared', 'entity.name.type.mace'));
+	assert.ok(hasScope('Shared', 'storage.type.named.mace'));
 	assert.ok(hasScope('$self', 'variable.language.self.mace'));
 	assert.ok(hasScope('$input', 'variable.other.readwrite.mace'));
 });

@@ -13,7 +13,13 @@ test('registers Mace highlighting and snippets for .mace files', async () => {
 
 	assert.deepEqual(manifest.contributes.languages[0].extensions, ['.mace']);
 	assert.equal(manifest.contributes.snippets[0].language, 'mace');
-	assert.match(grammar.repository.keywords.patterns[0].match, /schema/);
-	assert.match(grammar.repository.types.patterns[0].match, /hex_float/);
+	const keywords = grammar.repository.keywords.patterns
+		.map((pattern: { match: string }) => pattern.match)
+		.join(' ');
+	const types = grammar.repository.types.patterns
+		.map((pattern: { match: string }) => pattern.match)
+		.join(' ');
+	assert.match(keywords, /schema/);
+	assert.match(types, /hex_float/);
 	assert.ok(grammar.patterns.some((pattern: { include?: string }) => pattern.include === '#comments'));
 });

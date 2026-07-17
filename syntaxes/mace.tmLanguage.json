@@ -142,8 +142,20 @@
     "keywords": {
       "patterns": [
         {
+          "name": "keyword.other.import.mace",
+          "match": "\\b(from|import|as)\\b"
+        },
+        {
+          "name": "keyword.other.directive.mace",
+          "match": "\\b(output|schema|schema_file|parse|parse_file)\\b"
+        },
+        {
           "name": "keyword.control.mace",
-          "match": "\\b(from|import|as|alias|schema|gen_doc|schema_doc|output|schema_file|parse|parse_file|match)\\b"
+          "match": "\\bmatch\\b"
+        },
+        {
+          "name": "keyword.declaration.mace",
+          "match": "\\b(alias|gen_doc|schema_doc)\\b"
         }
       ]
     },
@@ -158,8 +170,12 @@
     "types": {
       "patterns": [
         {
-          "name": "support.type.builtin.mace",
-          "match": "\\b(string|int|float|hex_int|hex_float|boolean|array|record|fusion|variant|choice)\\b"
+          "name": "storage.type.primitive.mace",
+          "match": "\\b(string|int|float|hex_int|hex_float|boolean)\\b"
+        },
+        {
+          "name": "storage.type.composite.mace",
+          "match": "\\b(array|record|fusion|variant|choice)\\b"
         }
       ]
     },
@@ -214,7 +230,7 @@
     "namedTypes": {
       "patterns": [
         {
-          "name": "entity.name.type.mace",
+          "name": "storage.type.named.mace",
           "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
         }
       ]

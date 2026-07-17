@@ -17,8 +17,8 @@ Tree-sitter builds a syntax tree and enforces structure. VS Code's TextMate engi
 | Declarations | `_declaration`, `variable_declaration`, `type_declaration`, `schema_declaration` | `declarations`, `modifiers`, `types`, `namedTypes` → declaration, modifier, built-in type, and defined-type scopes |
 | Documentation | `gen_doc_declaration`, `schema_doc_declaration`, `gen_doc_entry`, `schema_doc_entry`, `summary_entry`, `description_entry`, `fields_entry`, `field_doc_entry`, `inline_description`, `description_text` | `declarations`, `documentationKeys`, `inlineDocumentation`, and string entries |
 | Record types | `record_type`, `schema_field`, `_field_suffix`, `_field_separator`, `_pair_separator`, `optional_marker` | `properties`, `operators`, `punctuation`, and nested type entries |
-| Primitive types | `_type_reference`, `string_type`, `int_type`, `float_type`, `hex_int_type`, `hex_float_type`, `boolean_type`, `named_type` | `types` → `support.type.builtin.mace`; `namedTypes` → `entity.name.type.mace` |
-| Composite types | `array_type`, `record_map_type`, `fusion_type`, `variant_type`, `choice_type`, `choice_member` | `types`, brackets, numbers, strings, booleans, and named types |
+| Primitive types | `_type_reference`, `string_type`, `int_type`, `float_type`, `hex_int_type`, `hex_float_type`, `boolean_type`, `named_type` | `types` → `storage.type.primitive.mace`; `namedTypes` → `storage.type.named.mace` |
+| Composite types | `array_type`, `record_map_type`, `fusion_type`, `variant_type`, `choice_type`, `choice_member` | `types` → `storage.type.composite.mace`, plus brackets, literals, and named types |
 | Output directives | `_data_directive_list`, `_schema_directive_list`, `data_output_mode_directive`, `schema_output_mode_directive`, `data_mode`, `schema_mode`, `schema_directive`, `schema_file_directive`, `parse_directive`, `parse_file_directive` | `keywords`, `languageConstants`, `paths`, `operators`, and `punctuation` |
 | Output fields | `output_field`, `output_schema_field` | `properties`, types, literals, operators, and punctuation |
 | Nullability | `nullable_modifier`, `optional_marker` | `modifiers` → `storage.modifier.mace`; `operators` → `keyword.operator.mace` |
@@ -38,14 +38,16 @@ Tree-sitter builds a syntax tree and enforces structure. VS Code's TextMate engi
 
 ## Scope policy
 
-- Language structure and control words use `keyword.control.mace`.
-- Declaration words use `keyword.declaration.mace`.
+- `match` uses `keyword.control.mace`; imports and directives use specialized `keyword.other` scopes.
+- Declaration words use `keyword.declaration.mace`, while declared type names use `entity.name.type.mace`.
 - `nullable` uses `storage.modifier.mace`.
-- Primitive and composite type constructors use `support.type.builtin.mace`.
-- Declared and conventional named types use `entity.name.type.mace`.
+- Primitive and composite type constructors use `storage.type.primitive.mace` and `storage.type.composite.mace`.
+- Named type references use `storage.type.named.mace`.
 - Record and documentation keys use `variable.other.property.mace`.
 - `$self` uses `variable.language.self.mace`; parsed input uses `variable.other.readwrite.mace`.
 - Operators use `keyword.operator.mace`, except word-form `in`, which uses `keyword.operator.word.mace`.
+
+These names follow the [TextMate grammar naming conventions](https://macromates.com/manual/en/language_grammars#naming-conventions): language types belong under `storage.type`, declarations under `entity.name.type`, constants under `constant`, and framework-oriented `support` scopes are avoided for Mace syntax.
 
 ## Verification
 
