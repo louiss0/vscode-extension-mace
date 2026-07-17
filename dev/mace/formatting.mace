@@ -1,0 +1,7 @@
+// Intentionally awkward formatting for Format Document development.
+|=====|
+schema Person:{name:string,active:boolean,};
+Person person={name:"Ada",active:true,};
+|=====|
+[output = 'data', schema = Person]
+{name:person.name,active:person.active,}

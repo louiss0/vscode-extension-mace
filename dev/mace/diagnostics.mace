@@ -1,0 +1,8 @@
+// Intentionally invalid: the LSP should report a type mismatch.
+|===|
+int invalid_total = 1.5;
+|===|
+[output = 'data']
+{
+  invalid_total: invalid_total,
+}

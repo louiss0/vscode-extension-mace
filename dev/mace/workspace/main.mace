@@ -1,0 +1,14 @@
+// Exercises completion, hover, definition, rename, and imports.
+|================================|
+from './shared.mace' import SharedConfig;
+
+SharedConfig config = {
+  name: "development",
+  retries: 3,
+};
+|================================|
+[output = 'data', schema = SharedConfig]
+{
+  name: config.name,
+  retries: config.retries,
+}

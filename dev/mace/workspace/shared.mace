@@ -1,0 +1,10 @@
+|================================|
+schema SharedConfig: {
+  name: string,
+  retries: int,
+};
+|================================|
+[output = 'schema']
+{
+  SharedConfig: SharedConfig,
+}

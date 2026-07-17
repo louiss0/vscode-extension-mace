@@ -1,0 +1,26 @@
+// Open the Outline view or press Ctrl+Shift+O while editing this file.
+|============================================================|
+alias WorkspaceName: string;
+
+schema Workspace: {
+  name: WorkspaceName,
+  root: string,
+  enabled: boolean,
+  extensions: array<string>,
+};
+
+WorkspaceName workspace_name = "Mace";
+Workspace workspace = {
+  name: workspace_name,
+  root: "./",
+  enabled: true,
+  extensions: ["mace"],
+};
+|============================================================|
+[output = 'data', schema = Workspace]
+{
+  name: workspace.name,
+  root: workspace.root,
+  enabled: workspace.enabled,
+  extensions: workspace.extensions,
+}
