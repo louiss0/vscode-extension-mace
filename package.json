@@ -88,9 +88,9 @@
         },
         "mace.server.developmentMode": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "scope": "machine-overridable",
-          "description": "Run `go run ./cmd lsp` from the workspace instead of the pinned Mace release."
+          "description": "Run the current workspace source with `go run ./cmd lsp`. Disable this to use the pinned Mace release."
         }
       }
     },

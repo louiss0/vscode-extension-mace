@@ -33,4 +33,9 @@ test('contributes common Mace language-server commands', async () => {
 				binding.command === 'mace.restartLanguageServer' && binding.when === 'editorLangId == mace',
 		),
 	);
+	assert.equal(
+		manifest.contributes.configuration.properties['mace.server.developmentMode'].default,
+		true,
+		'local `go run ./cmd lsp` must be the default server',
+	);
 });

@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
 	getBinaryServerCommand,
 	getDevelopmentServerCommand,
+	shouldUseDevelopmentServer,
 } from '../src/server-command.js';
 
 test('starts the repository language server in development mode', () => {
@@ -19,4 +20,10 @@ test('starts a release binary with the lsp subcommand', () => {
 		command: 'C:\\bin\\mace.exe',
 		args: ['lsp'],
 	});
+});
+
+test('allows launch configurations to override the configured server mode', () => {
+	assert.equal(shouldUseDevelopmentServer(true, undefined), true);
+	assert.equal(shouldUseDevelopmentServer(false, 'development'), true);
+	assert.equal(shouldUseDevelopmentServer(true, 'release'), false);
 });

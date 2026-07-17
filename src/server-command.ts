@@ -6,6 +6,16 @@ export interface ServerCommand {
 	};
 }
 
+export function shouldUseDevelopmentServer(
+	configuredMode: boolean,
+	extensionMode: string | undefined,
+) {
+	if (extensionMode === 'release') {
+		return false;
+	}
+	return configuredMode || extensionMode === 'development';
+}
+
 export function getDevelopmentServerCommand(workspacePath: string): ServerCommand {
 	return {
 		command: 'go',

@@ -13,15 +13,15 @@ Official language support for the [Mace configuration language](https://github.c
 
 ## Language server
 
-The extension reads `mace-version.json`, downloads the matching Mace release from GitHub, and caches the executable in VS Code's global extension storage. The server starts automatically when a `.mace` file opens.
+By default, the extension runs the current workspace source with:
 
-Supported release platforms are:
+```sh
+go run ./cmd lsp
+```
 
-- Linux x64 and ARM64
-- macOS x64 and ARM64
-- Windows x64 and ARM64
+This mode requires Go and expects the first open workspace folder to be the Mace source repository. It ensures extension development uses the current checkout rather than the older pinned release.
 
-Set `mace.server.path` to use an existing Mace executable instead. The executable must support `mace lsp`.
+Disable `mace.server.developmentMode` to download the release in `mace-version.json`. Release binaries are cached in VS Code's global extension storage and support Linux, macOS, and Windows on x64 and ARM64. Set `mace.server.path` to use another Mace executable; it must support `mace lsp`.
 
 ## Commands
 
@@ -47,8 +47,8 @@ pnpm test
 
 Open this directory in VS Code and use one of the launch configurations:
 
-- **Run Mace Extension** uses the release pinned in `mace-version.json`.
-- **Run Mace Extension (development server)** opens the parent Mace repository and runs `go run ./cmd lsp`.
+- **Run Mace Extension (local Go server)** opens the parent Mace repository and runs `go run ./cmd lsp`.
+- **Run Mace Extension (pinned release)** explicitly tests the release in `mace-version.json`.
 
 Package a VSIX after all tests pass:
 

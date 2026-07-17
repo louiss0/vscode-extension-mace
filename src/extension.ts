@@ -15,6 +15,7 @@ import type { Result } from './release.js';
 import {
 	getBinaryServerCommand,
 	getDevelopmentServerCommand,
+	shouldUseDevelopmentServer,
 	type ServerCommand,
 } from './server-command.js';
 
@@ -138,6 +139,11 @@ class MaceRuntime implements vscode.Disposable {
 		const selection = await vscode.window.showQuickPick(
 			[
 				{
+					label: 'Workspace Go server',
+					description: 'Run `go run ./cmd lsp` from the open workspace (default)',
+					mode: 'development',
+				},
+				{
 					label: 'Pinned Mace release',
 					description: 'Download and cache the version bundled with this extension',
 					mode: 'release',
@@ -146,11 +152,6 @@ class MaceRuntime implements vscode.Disposable {
 					label: 'Choose a Mace executable…',
 					description: 'Use an existing Mace installation',
 					mode: 'custom',
-				},
-				{
-					label: 'Workspace development server',
-					description: 'Run `go run ./cmd lsp` from the open workspace',
-					mode: 'development',
 				},
 			],
 			{ placeHolder: 'Select how the Mace language server should run' },
@@ -213,9 +214,10 @@ class MaceRuntime implements vscode.Disposable {
 		}
 
 		const workspacePath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-		const usesDevelopmentServer =
-			configuration.get<boolean>('developmentMode', false) ||
-			process.env.MACE_EXTENSION_MODE === 'development';
+		const usesDevelopmentServer = shouldUseDevelopmentServer(
+			configuration.get<boolean>('developmentMode', true),
+			process.env.MACE_EXTENSION_MODE,
+		);
 		if (usesDevelopmentServer) {
 			if (!workspacePath) {
 				return { error: new Error('Mace development mode requires an open workspace') };

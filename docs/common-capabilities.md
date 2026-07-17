@@ -5,12 +5,12 @@ The extension applies the APIs described by VS Code's [Common Capabilities](http
 | Capability | Mace implementation |
 | --- | --- |
 | Commands | Restart the language server, show its output, select its executable strategy, and clear downloaded servers |
-| Configuration | `mace.server.path` and `mace.server.developmentMode` |
+| Configuration | `mace.server.path` and `mace.server.developmentMode`; development mode defaults to the workspace's `go run ./cmd lsp` |
 | Keybindings | `Ctrl+Alt+M R` (`Cmd+Alt+M R` on macOS) restarts the server while editing Mace |
 | Context menus | Mace editors expose restart and output commands |
 | Data storage | Release binaries are cached under `ExtensionContext.globalStorageUri` and shared across workspaces |
 | Notifications | Startup, selection, cache, download, and server failures use the appropriate information or error messages |
-| Quick Pick | **Mace: Select Language Server** chooses the pinned release, a custom executable, or workspace development mode |
+| Quick Pick | **Mace: Select Language Server** chooses the default workspace Go server, pinned release, or a custom executable |
 | File picker | The custom executable option opens the native file picker |
 | Output channel | **Mace Language Server** records the selected command, lifecycle events, client logs, and failures |
 | Progress | Preparing or downloading the pinned release reports notification progress |
