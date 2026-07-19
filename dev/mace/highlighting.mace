@@ -1,10 +1,7 @@
-// Exercises the TextMate grammar without shipping this file in the VSIX.
-|============================================================|
-// Public identifier documentation
+|====================================================|
 alias Identifier: hex_int /# Hexadecimal identifier;
 alias Ratio: hex_float;
 alias Status: choice["ready", "waiting"];
-
 schema HighlightSample: {
   id: Identifier,
   label: string,
@@ -13,17 +10,21 @@ schema HighlightSample: {
   enabled: boolean,
   tags: array<string>,
   metadata: record<string>,
-  status: Status,
-};
-
+  status: Status
+}
 Identifier id = 0x2A;
 Ratio hexadecimal_ratio = 0x1.8;
 float decimal_ratio = 1.5;
 string missing_label = "not provided";
 boolean enabled = true;
 string rendered = "id=$(id)";
-array<string> tags = ["grammar", "theme"];
-record<string> metadata = { editor: "vscode" };
+array<string> tags = [
+  "grammar",
+  "theme"
+];
+record<string> metadata = {
+  editor: "vscode"
+};
 HighlightSample sample = {
   id: id,
   label: rendered,
@@ -32,12 +33,12 @@ HighlightSample sample = {
   enabled: enabled,
   tags: tags,
   metadata: metadata,
-  status: "ready",
+  status: "ready"
 };
-|============================================================|
+|====================================================|
 [output = 'data']
 {
-  sample: sample,
-  hexadecimal_ratio: hexadecimal_ratio,
-  missing_label: missing_label,
+  sample,
+  hexadecimal_ratio,
+  missing_label
 }

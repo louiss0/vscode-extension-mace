@@ -1,10 +1,10 @@
-|================================|
+|======================|
 schema SharedConfig: {
   name: string,
-  retries: int,
-};
-|================================|
+  retries: int
+}
+|======================|
 [output = 'schema']
 {
-  SharedConfig: SharedConfig,
+  SharedConfig: SharedConfig
 }

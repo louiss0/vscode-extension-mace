@@ -1,0 +1,14 @@
+
+{
+  first: "Shelton",
+  last: "Louis",
+  full_name: "$($self.first) $($self.last)",
+  friends: ["James", "Mary", "Joanna", "Suki" ],
+  skills: ["Python", "Ruby", "Rust"],
+  average_grade: 85,
+  traits: {
+    intelligence: 90,
+    friendliness: 85,
+    humor: 75,
+  }
+}
