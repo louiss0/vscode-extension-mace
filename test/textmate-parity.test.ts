@@ -44,7 +44,7 @@ function scopesFor(source: string, grammar: Awaited<ReturnType<typeof loadMaceGr
 test('TextMate grammar scopes Tree-sitter language features', async () => {
 	const grammar = await loadMaceGrammar();
 	const tokens = scopesFor(
-		`|===|\nfrom './shared.mace' import Region;\nnullable array<hex_float> values = left <> right;\nboolean included = item in values;\nstring label = "value=$(values)" /# rendered label;\n|===|\n[output = data]\n{ label: label, }`,
+		`|===|\nfrom './shared.mace' import Region;\nnullable array<hex_float> values = left <> right;\nstring included = item?.name ?? "";\nstring label = "value=$(values)" /# rendered label;\n|===|\n[output = data]\n{ label: label, }`,
 		grammar,
 	);
 
@@ -53,7 +53,6 @@ test('TextMate grammar scopes Tree-sitter language features', async () => {
 	assert.ok(scopes('nullable').includes('storage.modifier.mace'));
 	assert.ok(scopes('hex_float').includes('storage.type.primitive.mace'));
 	assert.ok(scopes('<>').includes('keyword.operator.mace'));
-	assert.ok(scopes('in').includes('keyword.operator.word.mace'));
 	assert.ok(
 		tokens.some(
 			token =>

@@ -259,10 +259,6 @@
     "operators": {
       "patterns": [
         {
-          "name": "keyword.operator.word.mace",
-          "match": "\\bin\\b"
-        },
-        {
           "name": "keyword.operator.mace",
           "match": "(?:>>>|>>|<<|<>|\\*\\*|&&|\\|\\||==|!=|<=|>=|\\?\\.|\\?\\?|=>|[!~+\\-*/%&|^<>=?])"
         }

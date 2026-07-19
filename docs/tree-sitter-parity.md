@@ -27,7 +27,7 @@ Tree-sitter builds a syntax tree and enforces structure. VS Code's TextMate engi
 | Unary arithmetic | `unary_expression`, `bang_operator`, `tilde_operator`, `plus_operator`, `minus_operator` | `operators` → `keyword.operator.mace` |
 | Numeric arithmetic | `exponent_expression`, `multiplicative_expression`, `additive_expression`, `double_star_operator`, `star_operator`, `slash_operator`, `percent_operator` | `operators` → `keyword.operator.mace` |
 | Shifts | `shift_expression`, `shift_left_operator`, `shift_right_operator`, `unsigned_shift_right_operator` | `operators` → `keyword.operator.mace` |
-| Relations | `relational_expression`, `less_operator`, `less_equal_operator`, `greater_operator`, `greater_equal_operator`, `in_operator` | symbolic operators → `keyword.operator.mace`; `in` → `keyword.operator.word.mace` |
+| Relations | `relational_expression`, `less_operator`, `less_equal_operator`, `greater_operator`, `greater_equal_operator` | `keyword.operator.mace` |
 | Structural merge | `merge_operand`, `structural_merge` | `<>` → `keyword.operator.mace`; operands use collection and identifier entries |
 | Equality | `equality_expression`, `equal_equal_operator`, `not_equal_operator` | `operators` → `keyword.operator.mace` |
 | Bitwise expressions | `bitwise_and_expression`, `bitwise_xor_expression`, `bitwise_or_expression`, `ampersand_operator`, `caret_operator`, `pipe_operator` | `operators` → `keyword.operator.mace` |
@@ -45,7 +45,7 @@ Tree-sitter builds a syntax tree and enforces structure. VS Code's TextMate engi
 - Named type references use `storage.type.named.mace`.
 - Record and documentation keys use `variable.other.property.mace`.
 - `$self` uses `variable.language.self.mace`; parsed input uses `variable.other.readwrite.mace`.
-- Operators use `keyword.operator.mace`, except word-form `in`, which uses `keyword.operator.word.mace`.
+- Operators use `keyword.operator.mace`.
 
 These names follow the [TextMate grammar naming conventions](https://macromates.com/manual/en/language_grammars#naming-conventions): language types belong under `storage.type`, declarations under `entity.name.type`, constants under `constant`, and framework-oriented `support` scopes are avoided for Mace syntax. Structural delimiters use non-styling `meta` scopes instead of introducing a non-standard root scope.
 
