@@ -19,6 +19,7 @@
     { "include": "#specialVariables" },
     { "include": "#namedTypes" },
     { "include": "#operators" },
+    { "include": "#identifiers" },
     { "include": "#punctuation" }
   ],
   "repository": {
@@ -116,14 +117,14 @@
     "declarations": {
       "patterns": [
         {
-          "match": "\\b(alias|schema)\\s+([A-Za-z][A-Za-z0-9_]*)",
+          "match": "\\b(alias|schema)\\s+([A-Za-z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)*)",
           "captures": {
             "1": { "name": "keyword.other.declaration.mace" },
             "2": { "name": "entity.name.type.mace" }
           }
         },
         {
-          "match": "\\b(gen_doc|schema_doc)\\s+([A-Za-z][A-Za-z0-9_]*)",
+          "match": "\\b(gen_doc|schema_doc)\\s+([A-Za-z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)*)",
           "captures": {
             "1": { "name": "keyword.other.declaration.mace" },
             "2": { "name": "entity.name.type.mace" }
@@ -143,7 +144,7 @@
       "patterns": [
         {
           "name": "keyword.other.import.mace",
-          "match": "\\b(from|import|as)\\b"
+          "match": "\\b(from|import-as|import)\\b"
         },
         {
           "name": "keyword.other.directive.mace",
@@ -223,7 +224,7 @@
         },
         {
           "name": "variable.other.readwrite.mace",
-          "match": "\\$[A-Za-z][A-Za-z0-9_]*"
+          "match": "\\$[A-Za-z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)*"
         }
       ]
     },
@@ -231,7 +232,7 @@
       "patterns": [
         {
           "name": "storage.type.named.mace",
-          "match": "\\b[A-Z][A-Za-z0-9_]*\\b"
+          "match": "\\b[A-Z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)*\\b"
         }
       ]
     },
@@ -239,11 +240,19 @@
       "patterns": [
         {
           "name": "variable.other.property.mace",
-          "match": "[A-Za-z][A-Za-z0-9_]*(?=\\??\\s*:)"
+          "match": "[A-Za-z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)*(?=\\??\\s*:)"
         },
         {
           "name": "variable.other.property.mace",
-          "match": "(?<=\\.)[A-Za-z][A-Za-z0-9_]*"
+          "match": "(?<=\\.)[A-Za-z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)*"
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.readwrite.mace",
+          "match": "\\b[A-Za-z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)*\\b"
         }
       ]
     },
