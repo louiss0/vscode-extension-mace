@@ -1,44 +1,46 @@
-trigger:
-  branches:
-    include:
-      - main
-  tags:
-    include:
-      - v*
-
-pr:
-  branches:
-    include:
-      - main
-
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-  - checkout: self
-
-  - task: NodeTool@0
-    displayName: Install Node.js
-    inputs:
-      versionSpec: 24.x
-
-  - script: npm install --global pnpm@11.11.0
-    displayName: Install pnpm
-
-  - script: pnpm install --frozen-lockfile
-    displayName: Install dependencies
-
-  - script: pnpm run package
-    displayName: Test and package extension
-
-  - task: PublishPipelineArtifact@1
-    displayName: Upload VSIX artifact
-    inputs:
-      targetPath: mace.vsix
-      artifact: vscode-extension
-
-  - script: pnpm run publish:marketplace
-    displayName: Publish to VS Code Marketplace
-    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
-    env:
-      VSCE_PAT: $(VSCE_PAT)
+# Azure Pipelines publishing is intentionally disabled until hosted parallelism is available.
+#
+# trigger:
+#   branches:
+#     include:
+#       - main
+#   tags:
+#     include:
+#       - v*
+#
+# pr:
+#   branches:
+#     include:
+#       - main
+#
+# pool:
+#   vmImage: ubuntu-latest
+#
+# steps:
+#   - checkout: self
+#
+#   - task: NodeTool@0
+#     displayName: Install Node.js
+#     inputs:
+#       versionSpec: 24.x
+#
+#   - script: npm install --global pnpm@11.11.0
+#     displayName: Install pnpm
+#
+#   - script: pnpm install --frozen-lockfile
+#     displayName: Install dependencies
+#
+#   - script: pnpm run package
+#     displayName: Test and package extension
+#
+#   - task: PublishPipelineArtifact@1
+#     displayName: Upload VSIX artifact
+#     inputs:
+#       targetPath: mace.vsix
+#       artifact: vscode-extension
+#
+#   - script: pnpm run publish:marketplace
+#     displayName: Publish to VS Code Marketplace
+#     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+#     env:
+#       VSCE_PAT: $(VSCE_PAT)

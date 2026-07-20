@@ -29,7 +29,7 @@
     "watch": "tsc -w -p tsconfig.json",
     "test": "pnpm run compile && node --test dist/test/**/*.test.js",
     "package": "pnpm run test && pnpm run bundle && vsce package --no-dependencies --out mace.vsix",
-    "publish:marketplace": "vsce publish --packagePath mace.vsix --skip-duplicate"
+    "publish:marketplace": "vsce publish --packagePath mace.vsix"
   },
   "contributes": {
     "commands": [
