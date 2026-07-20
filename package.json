@@ -3,7 +3,7 @@
   "displayName": "Mace",
   "description": "Official language support for Mace configuration files.",
   "version": "0.0.1",
-  "publisher": "the-code-fixer-23",
+  "publisher": "SheltonLouis",
   "author": "Shelton Louis <louisshelton0@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -28,7 +28,8 @@
     "build": "pnpm run compile && pnpm run bundle",
     "watch": "tsc -w -p tsconfig.json",
     "test": "pnpm run compile && node --test dist/test/**/*.test.js",
-    "package": "pnpm run test && pnpm run bundle && vsce package --no-dependencies"
+    "package": "pnpm run test && pnpm run bundle && vsce package --no-dependencies --out mace.vsix",
+    "publish:marketplace": "vsce publish --packagePath mace.vsix"
   },
   "contributes": {
     "commands": [

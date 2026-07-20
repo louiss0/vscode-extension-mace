@@ -1,20 +1,44 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - v*
+
+pr:
+  branches:
+    include:
+      - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: AzureCLI@2
-  displayName: 'Get identity details'
-  inputs:
-    azureSubscription: VsCode
-    scriptType: pscore
-    scriptLocation: inlineScript
-    inlineScript: |
-      az rest -u https://app.vssps.visualstudio.com/_apis/profile/profiles/me --resource 499b84ac-1321-427f-aa17-267ca6975798
+  - checkout: self
+
+  - task: NodeTool@0
+    displayName: Install Node.js
+    inputs:
+      versionSpec: 24.x
+
+  - script: npm install --global pnpm@11.11.0
+    displayName: Install pnpm
+
+  - script: pnpm install --frozen-lockfile
+    displayName: Install dependencies
+
+  - script: pnpm run package
+    displayName: Test and package extension
+
+  - task: PublishPipelineArtifact@1
+    displayName: Upload VSIX artifact
+    inputs:
+      targetPath: mace.vsix
+      artifact: vscode-extension
+
+  - script: pnpm run publish:marketplace
+    displayName: Publish to VS Code Marketplace
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+    env:
+      VSCE_PAT: $(VSCE_PAT)
