@@ -144,7 +144,7 @@
       "patterns": [
         {
           "name": "keyword.other.import.mace",
-          "match": "\\b(from|import-as|import)\\b"
+          "match": "\\b(from|bind|import)\\b"
         },
         {
           "name": "keyword.other.directive.mace",

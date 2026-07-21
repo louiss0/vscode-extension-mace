@@ -70,14 +70,14 @@ test('TextMate grammar scopes Tree-sitter language features', async () => {
 test('TextMate grammar keeps kebab-case identifiers intact', async () => {
 	const grammar = await loadMaceGrammar();
 	const tokens = scopesFor(
-		`|===|\nfrom './profile.mace' import display-name:local-name;\nfrom './shared.mace' import-as shared-data;\nschema user-profile: { display-name: string, };\nuser-profile current-user = { display-name: "Ada", };\n|===|\n{ nested-record: { display-name: current-user.display-name, }, }`,
+		`|===|\nfrom './profile.mace' import display-name:local-name;\nfrom './shared.mace' bind shared-data;\nschema user-profile: { display-name: string, };\nuser-profile current-user = { display-name: "Ada", };\n|===|\n{ nested-record: { display-name: current-user.display-name, }, }`,
 		grammar,
 	);
 
 	const matchingTokens = (text: string) => tokens.filter(token => token.text === text);
 	assert.ok(matchingTokens('user-profile').some(token => token.scopes.includes('entity.name.type.mace')));
 	assert.ok(matchingTokens('display-name').some(token => token.scopes.includes('variable.other.property.mace')));
-	assert.ok(matchingTokens('import-as').some(token => token.scopes.includes('keyword.other.import.mace')));
+	assert.ok(matchingTokens('bind').some(token => token.scopes.includes('keyword.other.import.mace')));
 	for (const identifier of ['display-name', 'local-name', 'shared-data', 'user-profile', 'current-user', 'nested-record']) {
 		assert.ok(matchingTokens(identifier).length > 0, `kebab-case identifier was split: ${identifier}`);
 	}
@@ -86,14 +86,14 @@ test('TextMate grammar keeps kebab-case identifiers intact', async () => {
 test('TextMate grammar covers every Tree-sitter lexical family', async () => {
 	const grammar = await loadMaceGrammar();
 	const tokens = scopesFor(
-		`// line\n/* block */\n|===|\nfrom './shared.mace' import-as Shared;\nalias Value: variant[string, int, float, hex_int, hex_float, boolean, array<string>, record<int>, fusion[Shared], choice[true, false, 1, 1.0, 0x1, 0x1.0]];\nschema Item: { optional?: nullable Value, };\ngen_doc Value { summary: "Value", description: """A $(Shared) value""", };\nschema_doc Item { fields: { optional: 'Optional', }, };\nint math = !flag || left && right | bits ^ mask & value == other != third < upper <= max > lower >= min << one >> two >>> three + four - five * six / seven % eight ** nine ? ten : null;\nValue matched = match (value) { string => \"text\", };\n|===|\n[output = data, schema = Item, schema_file = './schema.mace', parse = Item, parse_file = './input.mace']\n{ optional: $self.value ?? $input?.value, }`,
+		`// line\n/* block */\n|===|\nfrom './shared.mace' bind Shared;\nalias Value: variant[string, int, float, hex_int, hex_float, boolean, array<string>, record<int>, fusion[Shared], choice[true, false, 1, 1.0, 0x1, 0x1.0]];\nschema Item: { optional?: nullable Value, };\ngen_doc Value { summary: "Value", description: """A $(Shared) value""", };\nschema_doc Item { fields: { optional: 'Optional', }, };\nint math = !flag || left && right | bits ^ mask & value == other != third < upper <= max > lower >= min << one >> two >>> three + four - five * six / seven % eight ** nine ? ten : null;\nValue matched = match (value) { string => \"text\", };\n|===|\n[output = data, schema = Item, schema_file = './schema.mace', parse = Item, parse_file = './input.mace']\n{ optional: $self.value ?? $input?.value, }`,
 		grammar,
 	);
 
 	const hasScope = (text: string, scope: string) =>
 		tokens.some(token => token.text === text && token.scopes.includes(scope));
 
-	for (const keyword of ['from', 'import-as']) {
+	for (const keyword of ['from', 'bind']) {
 		assert.ok(hasScope(keyword, 'keyword.other.import.mace'), `missing import scope for ${keyword}`);
 	}
 	for (const directive of ['output', 'schema_file', 'parse', 'parse_file']) {
